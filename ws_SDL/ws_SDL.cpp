@@ -21,14 +21,14 @@ int main(int argc, char* argv[])
     //Clears everything on the window -- paint over with last know colour
     SDL_RenderClear(renderer);
 
-    //Creates a rectangle
-    SDL_Rect r;
-    r.x = 30;
-    r.y = 30;
-    r.w = 100;
-    r.h = 50;
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-    SDL_RenderDrawRect(renderer, &r);
+    ////Creates a rectangle
+    //SDL_Rect r;
+    //r.x = 30;
+    //r.y = 30;
+    //r.w = 100;
+    //r.h = 50;
+    //SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    //SDL_RenderDrawRect(renderer, &r);
 
 
     //Tell SDL we have finished drawing, SDL will actually show our changes
