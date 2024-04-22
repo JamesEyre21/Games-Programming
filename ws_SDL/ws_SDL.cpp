@@ -3,15 +3,17 @@
 Game* game = nullptr;
 
 
-int main(int argc, char* argv[])
+int SDL_main(int argc, char* argv[])
 {
     game = new Game();
 
-    game->init("Game Title", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false);
+    game->width = 800;
+    game->height = 600;
+    game->init("Game Title", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, game->width, game->height, false);
 
     while (game->running())
     {
-        game->handleEvents();
+        game->input();
         game->update();
         game->render();
     }
