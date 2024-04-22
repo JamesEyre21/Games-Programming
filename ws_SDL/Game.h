@@ -23,8 +23,8 @@ public:
 	bool running() { return isRunning; }
 
 private:
-	int count = 0;
 	bool isRunning;
+	bool isMoving;
 	bool isFullscreen;
 	SDL_Rect rect;
 	SDL_Window* window;

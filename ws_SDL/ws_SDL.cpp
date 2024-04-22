@@ -5,6 +5,12 @@ Game* game = nullptr;
 
 int SDL_main(int argc, char* argv[])
 {
+    const int fps = 60;
+    const int frameDelay = 100 / fps;
+
+    Uint32 frameStart;
+    int frameTime;
+
     game = new Game();
 
     game->width = 800;
@@ -13,9 +19,18 @@ int SDL_main(int argc, char* argv[])
 
     while (game->running())
     {
+        frameStart = SDL_GetTicks();
+
         game->input();
         game->update();
         game->render();
+
+        frameTime = SDL_GetTicks() - frameStart;
+
+        if (frameDelay > frameTime)
+        {
+            SDL_Delay(frameDelay - frameTime);
+        }
     }
 
     game->clean();

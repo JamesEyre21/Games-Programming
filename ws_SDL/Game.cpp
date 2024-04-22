@@ -3,7 +3,11 @@
 
 Game::Game()
 {
-
+	width = 800;
+	height = 600;
+	isRunning = true;
+	isMoving = true;
+	isFullscreen = false;
 }
 
 Game::~Game()
@@ -81,13 +85,27 @@ void Game::input()
 		{
 			isRunning = false;
 		}
+		if (event.key.keysym.scancode == SDL_SCANCODE_SPACE)
+		{
+			isMoving = !isMoving;
+		}
+
 		break;
 	}
 }
 
 void Game::update()
 {
-	
+	if (isMoving)
+	{
+		rect.x++;
+
+		if (rect.x >= width)
+		{
+			rect.x = 0;
+			rect.y = 300;
+		}
+	}
 }
 
 void Game::render()
