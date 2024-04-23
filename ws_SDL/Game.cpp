@@ -81,7 +81,7 @@ void Game::input()
 				isFullscreen = false;
 			}
 		}
-		if (event.key.keysym.scancode == SDL_SCANCODE_Q)
+		if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
 		{
 			isRunning = false;
 		}
