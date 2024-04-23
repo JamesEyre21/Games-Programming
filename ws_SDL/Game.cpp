@@ -6,7 +6,6 @@ Game::Game()
 	width = 800;
 	height = 600;
 	isRunning = true;
-	isMoving = true;
 	isFullscreen = false;
 }
 
@@ -40,11 +39,6 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		{
 			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 			std::cout << "Renderer Created!" << std::endl;
-
-			rect.x = 400;
-			rect.y = 300;
-			rect.w = 50;
-			rect.h = 50;
 		}
 
 		isRunning = true;
@@ -87,8 +81,18 @@ void Game::input()
 		}
 		if (event.key.keysym.scancode == SDL_SCANCODE_SPACE)
 		{
-			isMoving = !isMoving;
+			player.isMoving = !player.isMoving;
 		}
+
+		/*Player movement*/
+		//Up
+		if (event.key.keysym.scancode == SDL_SCANCODE_W)
+		{
+			player.isMoving = true;
+			player.movingUp = true;
+		}
+
+
 
 		break;
 	}
@@ -96,14 +100,23 @@ void Game::input()
 
 void Game::update()
 {
-	if (isMoving)
+	if (player.isMoving)
 	{
-		rect.x++;
-
-		if (rect.x >= width)
+		if (player.movingUp)
 		{
-			rect.x = 0;
-			rect.y = 300;
+			player.playerRect.y += player.moveSpeed;
+		}
+		if (player.movingDown)
+		{
+			player.playerRect.y -= player.moveSpeed;
+		}
+		if (player.movingLeft)
+		{
+			player.playerRect.x -= player.moveSpeed;
+		}
+		if (player.movingRight)
+		{
+			player.playerRect.x += player.moveSpeed;
 		}
 	}
 }
@@ -113,7 +126,7 @@ void Game::render()
 	SDL_RenderClear(renderer);
 
 	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-	SDL_RenderDrawRect(renderer, &rect);
+	SDL_RenderDrawRect(renderer, &player.playerRect);
 
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 

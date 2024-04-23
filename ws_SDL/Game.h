@@ -2,8 +2,8 @@
 #define gameFile
 
 #include "SDL.h"
+#include "Player.h"
 #include <iostream>
-#include <array>
 
 class Game
 {
@@ -23,10 +23,10 @@ public:
 	bool running() { return isRunning; }
 
 private:
+	Player player;
+
 	bool isRunning;
-	bool isMoving;
 	bool isFullscreen;
-	SDL_Rect rect;
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 };
