@@ -8,6 +8,8 @@ class Player
 public:
 	Player();
 
+
+
 	SDL_Rect playerRect;
 	int moveSpeed;
 	int playerX;

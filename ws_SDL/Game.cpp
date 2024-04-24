@@ -21,7 +21,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	if (fullscreen)
 	{
 		isFullscreen = true;
-		flags = SDL_WINDOW_FULLSCREEN;
+		flags = SDL_WINDOW_FULLSCREEN_DESKTOP;
 	}
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
@@ -66,7 +66,7 @@ void Game::input()
 		{			
 			if (isRunning && !isFullscreen)
 			{
-				SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+				SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 				isFullscreen = true;
  			}
 			else
@@ -83,17 +83,6 @@ void Game::input()
 		{
 			player.isMoving = !player.isMoving;
 		}
-
-		/*Player movement*/
-		//Up
-		if (event.key.keysym.scancode == SDL_SCANCODE_W)
-		{
-			player.isMoving = true;
-			player.movingUp = true;
-		}
-
-
-
 		break;
 	}
 }
@@ -102,22 +91,7 @@ void Game::update()
 {
 	if (player.isMoving)
 	{
-		if (player.movingUp)
-		{
-			player.playerRect.y += player.moveSpeed;
-		}
-		if (player.movingDown)
-		{
-			player.playerRect.y -= player.moveSpeed;
-		}
-		if (player.movingLeft)
-		{
-			player.playerRect.x -= player.moveSpeed;
-		}
-		if (player.movingRight)
-		{
-			player.playerRect.x += player.moveSpeed;
-		}
+		player.playerRect.x++;
 	}
 }
 

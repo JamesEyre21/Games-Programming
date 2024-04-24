@@ -2,7 +2,7 @@
 
 Player::Player()
 {
-	moveSpeed = 1;
+	moveSpeed = 10;
 	playerX = 400;
 	playerY = 580;
 
