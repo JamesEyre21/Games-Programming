@@ -12,8 +12,6 @@ Player::Player()
 	playerRect.h = 20;
 
 	isMoving = false;
-	movingUp = false;
-	movingDown = false;
 	movingLeft = false;
-	movingRight = false;
+	movingRight = true;
 }

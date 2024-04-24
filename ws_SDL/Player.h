@@ -15,8 +15,6 @@ public:
 	int playerX;
 	int playerY;
 	bool isMoving;
-	bool movingUp;
-	bool movingDown;
 	bool movingLeft;
 	bool movingRight;
 };

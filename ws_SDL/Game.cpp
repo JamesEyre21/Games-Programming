@@ -89,10 +89,33 @@ void Game::input()
 
 void Game::update()
 {
-	if (player.isMoving)
+	if (player.playerRect.x == 0)
 	{
 		player.playerRect.x++;
+		player.movingRight = true;
+		player.movingLeft = false;
 	}
+	else if (player.playerRect.x == width)
+	{
+		player.playerRect.x--;
+		player.movingRight = false;
+		player.movingLeft = true;
+	}
+	else
+	{
+		if (player.isMoving)
+		{
+			if (player.movingRight)
+			{
+				player.playerRect.x++;
+			}
+			else if (player.movingLeft)
+			{
+				player.playerRect.x--;
+			}
+		}
+	}
+	
 }
 
 void Game::render()
@@ -100,7 +123,7 @@ void Game::render()
 	SDL_RenderClear(renderer);
 
 	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-	SDL_RenderDrawRect(renderer, &player.playerRect);
+	SDL_RenderFillRect(renderer, &player.playerRect);
 
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 

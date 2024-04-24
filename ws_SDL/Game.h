@@ -1,5 +1,5 @@
-#ifndef gameFile
-#define gameFile
+#ifndef gameWorld
+#define gameWorld
 
 #include "SDL.h"
 #include "Player.h"
