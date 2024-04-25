@@ -35,6 +35,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		}
 
 		renderer = SDL_CreateRenderer(window, -1, 0);
+		SDL_RenderSetLogicalSize(renderer, width, height);
 		if (renderer)
 		{
 			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -83,38 +84,35 @@ void Game::input()
 		{
 			player.isMoving = !player.isMoving;
 		}
+		if (event.key.keysym.scancode == SDL_SCANCODE_W)
+		{
+			player.isMoving = true;
+			player.playerRect.y -= player.moveSpeed;
+		}
+		if (event.key.keysym.scancode == SDL_SCANCODE_S)
+		{
+			player.isMoving = true;
+			player.playerRect.y += player.moveSpeed;
+		}
+		if (event.key.keysym.scancode == SDL_SCANCODE_A)
+		{
+			player.isMoving = true;
+			player.playerRect.x -= player.moveSpeed;
+		}
+		if (event.key.keysym.scancode == SDL_SCANCODE_D)
+		{
+			player.isMoving = true;
+			player.playerRect.x += player.moveSpeed;
+		}
+
+
 		break;
 	}
 }
 
 void Game::update()
 {
-	if (player.playerRect.x == 0)
-	{
-		player.playerRect.x++;
-		player.movingRight = true;
-		player.movingLeft = false;
-	}
-	else if (player.playerRect.x == width)
-	{
-		player.playerRect.x--;
-		player.movingRight = false;
-		player.movingLeft = true;
-	}
-	else
-	{
-		if (player.isMoving)
-		{
-			if (player.movingRight)
-			{
-				player.playerRect.x++;
-			}
-			else if (player.movingLeft)
-			{
-				player.playerRect.x--;
-			}
-		}
-	}
+	
 	
 }
 
