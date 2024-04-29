@@ -2,13 +2,11 @@
 
 Player::Player()
 {
-	moveSpeed = 20;
-	playerX = 400;
-	playerY = 580;
+	moveSpeed = 25;
 
-	playerRect.x = playerX;
-	playerRect.y = playerY;
-	playerRect.w = 50;
+	playerRect.x = 400;
+	playerRect.y = 600;
+	playerRect.w = 20;
 	playerRect.h = 20;
 
 	isMoving = false;

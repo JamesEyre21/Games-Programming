@@ -13,9 +13,9 @@ int SDL_main(int argc, char* argv[])
 
     game = new Game();
 
-    game->width = 800;
-    game->height = 600;
-    game->init("Game Title", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, game->width, game->height, false);
+    game->width = 820;
+    game->height = 620;
+    game->init("James Eyre, CGP2015M, 26464488, Game Title", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, game->width, game->height, false);
 
     while (game->running())
     {
@@ -32,7 +32,7 @@ int SDL_main(int argc, char* argv[])
             SDL_Delay(frameDelay - frameTime);
         }
     }
-
+    
     game->clean();
 
     return 0;

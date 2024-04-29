@@ -3,7 +3,8 @@
 
 #include "SDL.h"
 #include "Player.h"
-#include <iostream>
+#include "Enemy.h"
+#include <vector>
 
 class Game
 {
@@ -20,10 +21,13 @@ public:
 	void render();
 	void clean();
 
+	void createEnemies(int numEnemies);
+
 	bool running() { return isRunning; }
 
 private:
 	Player player;
+	std::vector<Enemy*> enemies;
 
 	bool isRunning;
 	bool isFullscreen;
