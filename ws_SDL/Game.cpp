@@ -2,6 +2,7 @@
 
 Game::Game()
 {	
+	score = 0;
 	width = 820;
 	height = 620;
 	isRunning = true;
@@ -34,8 +35,6 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 		}
 
-		createEnemies(3);
-
 		isRunning = true;
 	}
 
@@ -43,6 +42,16 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	{
 		isRunning = false;
 	}
+
+	playerSurface = IMG_Load("content/player.png");
+	playerTexture = SDL_CreateTextureFromSurface(renderer, playerSurface);
+	SDL_FreeSurface(playerSurface);
+
+	enemySurface = IMG_Load("content/enemy.png");
+	enemyTexture = SDL_CreateTextureFromSurface(renderer, enemySurface);
+	SDL_FreeSurface(enemySurface);
+
+	createEnemies(5);
 }
 
 /*Handles events, such as inputs*/
@@ -110,38 +119,23 @@ void Game::input()
 
 void Game::update()
 {
-	/*if (enemy.isMoving)
-	{
-		if (enemy.enemyRect.x == width - 20)
-		{
-			enemy.direction = 1;
-			enemy.Move();
-		}
-		else if (enemy.enemyRect.x == 0)
-		{
-			enemy.direction = 0;
-			enemy.Move();
-		}
-		else
-		{
-			enemy.Move();
-		}
-	}*/
+	moveEnemies();
+	checkBounds();	
 }
 
 void Game::render()
 {
 	SDL_RenderClear(renderer);
 
-	SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-	SDL_RenderFillRect(renderer, &player.playerRect);
+	//Draws the playerTexture over the playerRect
+	SDL_RenderCopy(renderer, playerTexture, NULL, &player.playerRect);
 
 	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 	for (int i = 0; i < enemies.size(); i++)
 	{
-		SDL_RenderFillRect(renderer, enemies[i]);
+		//Draws the enemyTexture over the enemyRect
+		SDL_RenderCopy(renderer, enemyTexture, NULL, &enemies[i]->enemyRect);
 	}
-	//SDL_RenderFillRect(renderer, &enemy.enemyRect);
 
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
@@ -153,8 +147,55 @@ void Game::createEnemies(int numEnemies)
 {
 	for (int i = 1; i <= numEnemies; i++)
 	{
-		Enemy* enemy = new Enemy(0, 20*i, 20, 40);
+		Enemy* enemy = new Enemy(randNum.randomNum(0, width-20), randNum.randomNum(0, 400), 20, 40, randNum.randomNum(0, 1));
 		enemies.push_back(enemy);
+	}
+}
+
+void Game::moveEnemies()
+{
+	for (int i = 0; i < enemies.size(); i++)
+	{
+		if (enemies[i]->isMoving)
+		{
+			if (enemies[i]->enemyRect.x == width - 20)
+			{
+				enemies[i]->enemyDir = 1;
+				enemies[i]->Move();
+			}
+			else if (enemies[i]->enemyRect.x == 0)
+			{
+				enemies[i]->enemyDir = 0;
+				enemies[i]->Move();
+			}
+			else
+			{
+				enemies[i]->Move();
+			}
+		}
+	}
+}
+
+void Game::checkBounds()
+{
+	if (player.isMoving)
+	{
+		if (player.playerRect.x > width - 20)
+		{
+			player.playerRect.x = width - 20;
+		}
+		else if (player.playerRect.x < 0)
+		{
+			player.playerRect.x = 0;
+		}
+		if (player.playerRect.y > height - 20)
+		{
+			player.playerRect.y = height - 20;
+		}
+		else if (player.playerRect.y < 0)
+		{
+			player.playerRect.y = 0;
+		}
 	}
 }
 
@@ -164,5 +205,6 @@ void Game::clean()
 {
 	SDL_DestroyWindow(window); //Destroys the window
 	SDL_DestroyRenderer(renderer); //Destroys the renderer
+	IMG_Quit(); //Cleans initialised IMG subsystems
 	SDL_Quit(); //Cleans all initialised subsystems
 }

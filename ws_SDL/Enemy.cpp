@@ -1,8 +1,9 @@
 #include "Enemy.h"
 
-Enemy::Enemy(int x, int y, int height, int width)
+Enemy::Enemy(int x, int y, int height, int width, int direction)
 {
 	moveSpeed = 1;
+	enemyDir = direction;
 	isMoving = true;
 
 	enemyRect.x = x;
@@ -14,11 +15,11 @@ Enemy::Enemy(int x, int y, int height, int width)
 
 void Enemy::Move()
 {
-	if (direction == 0)
+	if (enemyDir == 0)
 	{
 		enemyRect.x += moveSpeed;
 	}
-	else if (direction == 1)
+	else if (enemyDir == 1)
 	{
 		enemyRect.x -= moveSpeed;
 	}
