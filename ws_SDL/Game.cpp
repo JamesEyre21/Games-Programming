@@ -1,7 +1,8 @@
 #include "Game.h"
 
-Game::Game()
+Game::Game(const char* sceneName)
 {	
+	Game::sceneName = sceneName;
 	score = 0;
 	width = 820;
 	height = 620;
@@ -27,6 +28,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
 	{
 		window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
+		TTF_Init();
 
 		renderer = SDL_CreateRenderer(window, -1, 0);
 		SDL_RenderSetLogicalSize(renderer, width, height);
@@ -43,15 +45,29 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = false;
 	}
 
-	playerSurface = IMG_Load("content/player.png");
-	playerTexture = SDL_CreateTextureFromSurface(renderer, playerSurface);
-	SDL_FreeSurface(playerSurface);
 
-	enemySurface = IMG_Load("content/enemy.png");
-	enemyTexture = SDL_CreateTextureFromSurface(renderer, enemySurface);
-	SDL_FreeSurface(enemySurface);
+	if (sceneName == "startScene")
+	{
+		textManager = TextManager(renderer, 30, (width-180)/2, 200, 40, 20, "Game Title");
 
-	createEnemies(5);
+		textManager2 = TextManager(renderer, 10, (width-110)/2, 260, 40, 20, "Use WASD to move");
+
+		textManager3 = TextManager(renderer, 10, (width-140)/2, 450, 40, 20, "Press Space to continue...");
+
+	}
+	else if (sceneName == "gameScene")
+	{
+		playerSurface = IMG_Load("content/player.png");
+		playerTexture = SDL_CreateTextureFromSurface(renderer, playerSurface);
+		SDL_FreeSurface(playerSurface);
+
+		enemySurface = IMG_Load("content/enemy.png");
+		enemyTexture = SDL_CreateTextureFromSurface(renderer, enemySurface);
+		SDL_FreeSurface(enemySurface);
+
+		createEnemies(5);
+	}
+	
 }
 
 /*Handles events, such as inputs*/
@@ -85,32 +101,37 @@ void Game::input()
 		}
 		if (event.key.keysym.scancode == SDL_SCANCODE_SPACE)
 		{
-			player.isMoving = !player.isMoving;
+			if (sceneName == "startScene")
+			{
+				sceneName = "gameScene";
+			}
 		}
 
 		if (event.key.keysym.scancode == SDL_SCANCODE_W)
 		{
-			//std::cout << player.playerRect.x << "," << player.playerRect.y << "\n";
 			player.isMoving = true;
 			player.playerRect.y -= player.moveSpeed;
 		}
 		if (event.key.keysym.scancode == SDL_SCANCODE_S)
 		{
-			//std::cout << player.playerRect.x << "," << player.playerRect.y << "\n";
 			player.isMoving = true;
 			player.playerRect.y += player.moveSpeed;
 		}
 		if (event.key.keysym.scancode == SDL_SCANCODE_A)
 		{
-			//std::cout << player.playerRect.x << "," << player.playerRect.y << "\n";
 			player.isMoving = true;
 			player.playerRect.x -= player.moveSpeed;
 		}
 		if (event.key.keysym.scancode == SDL_SCANCODE_D)
 		{
-			//std::cout << player.playerRect.x << "," << player.playerRect.y << "\n";
 			player.isMoving = true;
 			player.playerRect.x += player.moveSpeed;
+		}
+
+	case SDL_USEREVENT:
+		if (event.user.data1 == timerTag);
+		{
+			countdownInterval();
 		}
 
 		break;
@@ -119,25 +140,40 @@ void Game::input()
 
 void Game::update()
 {
-	moveEnemies();
-	checkBounds();	
+	if (sceneName == "gameScene")
+	{
+		moveEnemies();
+		checkBounds();
+	}
+	
 }
 
 void Game::render()
 {
 	SDL_RenderClear(renderer);
 
-	//Draws the playerTexture over the playerRect
-	SDL_RenderCopy(renderer, playerTexture, NULL, &player.playerRect);
-
-	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-	for (int i = 0; i < enemies.size(); i++)
+	if (sceneName == "startScene")
 	{
-		//Draws the enemyTexture over the enemyRect
-		SDL_RenderCopy(renderer, enemyTexture, NULL, &enemies[i]->enemyRect);
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+		SDL_RenderCopy(renderer, textManager.textTexture, NULL, &textManager.textRect);
+		SDL_RenderCopy(renderer, textManager2.textTexture, NULL, &textManager2.textRect);
+		SDL_RenderCopy(renderer, textManager3.textTexture, NULL, &textManager3.textRect);
 	}
 
-	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	else if (sceneName == "gameScene")
+	{
+		//Draws the playerTexture over the playerRect
+		SDL_RenderCopy(renderer, playerTexture, NULL, &player.playerRect);
+
+		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+		for (int i = 0; i < enemies.size(); i++)
+		{
+			//Draws the enemyTexture over the enemyRect
+			SDL_RenderCopy(renderer, enemyTexture, NULL, &enemies[i]->enemyRect);
+		}
+
+		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	}
 
 	SDL_RenderPresent(renderer);
 }
@@ -199,6 +235,34 @@ void Game::checkBounds()
 	}
 }
 
+void Game::countdownInterval()
+{
+	countdownTime -= 1;
+	if (countdownTime < 0)
+	{
+		countdownTime = 0;
+		isRunning = false;
+	}
+}
+
+Uint32 Game::TimerCallBack(Uint32 interval, void* param)
+{
+	SDL_Event event;
+	SDL_UserEvent userEvent;
+
+	userEvent.type = SDL_USEREVENT;
+	userEvent.code = 0;
+	userEvent.data1 = &timerTag;
+	userEvent.data2 = NULL;
+
+	event.type = SDL_USEREVENT;
+	event.user = userEvent;
+	SDL_PushEvent(&event);
+
+	return (interval);
+}
+
+
 
 /*Cleans the game ebfore closing*/
 void Game::clean()
@@ -206,5 +270,6 @@ void Game::clean()
 	SDL_DestroyWindow(window); //Destroys the window
 	SDL_DestroyRenderer(renderer); //Destroys the renderer
 	IMG_Quit(); //Cleans initialised IMG subsystems
+	TTF_Quit(); //Cleans initialised TTF subsystems
 	SDL_Quit(); //Cleans all initialised subsystems
 }
