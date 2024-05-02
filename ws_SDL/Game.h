@@ -4,6 +4,7 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include "SDL_ttf.h"
+#include "SDL_mixer.h"
 #include "RandNum.h"
 #include "Player.h"
 #include "Enemy.h"
@@ -18,8 +19,7 @@ public:
 
 	const char* sceneName;
 	int score;
-	int countdownTime = 10;
-	const char* timerTag;
+	int countdownTime = 60;
 	int width;
 	int height;
 
@@ -42,6 +42,7 @@ private:
 	TextManager textManager;
 	TextManager textManager2;
 	TextManager textManager3;
+	Mix_Music* audio_background;
 	RandNum randNum;
 	Player player;
 	std::vector<Enemy*> enemies;

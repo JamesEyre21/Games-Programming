@@ -30,7 +30,7 @@ int SDL_main(int argc, char* argv[])
         if (game->sceneName == "gameScene" && changedScene == 0)
         {
             changedScene += 1;
-            game->init("James Eyre, CGP2015M, 26464488, Game Title", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, game->width, game->height, false);
+            game->init("James Eyre, CGP2015M, 26464488, Space Evader", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, game->width, game->height, false);
             SDL_AddTimer(1000, &TimerCallBackCB, NULL);
         }
 

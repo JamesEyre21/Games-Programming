@@ -48,7 +48,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	if (sceneName == "startScene")
 	{
-		textManager = TextManager(renderer, 30, (width-180)/2, 200, 40, 20, "Game Title");
+		textManager = TextManager(renderer, 30, (width-180)/2, 200, 40, 20, "Space Evader");
 
 		textManager2 = TextManager(renderer, 10, (width-110)/2, 260, 40, 20, "Use WASD to move");
 
@@ -57,6 +57,18 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	}
 	else if (sceneName == "gameScene")
 	{
+		if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1)
+		{
+			printf("No audio found! \n");
+		}
+		else
+		{
+			audio_background = Mix_LoadMUS("content/background.wav");
+			Mix_VolumeMusic(32);
+			Mix_PlayMusic(audio_background, 0);
+		}
+		
+
 		playerSurface = IMG_Load("content/player.png");
 		playerTexture = SDL_CreateTextureFromSurface(renderer, playerSurface);
 		SDL_FreeSurface(playerSurface);
@@ -106,30 +118,32 @@ void Game::input()
 				sceneName = "gameScene";
 			}
 		}
-
-		if (event.key.keysym.scancode == SDL_SCANCODE_W)
+		if (sceneName == "gameScene")
 		{
-			player.isMoving = true;
-			player.playerRect.y -= player.moveSpeed;
-		}
-		if (event.key.keysym.scancode == SDL_SCANCODE_S)
-		{
-			player.isMoving = true;
-			player.playerRect.y += player.moveSpeed;
-		}
-		if (event.key.keysym.scancode == SDL_SCANCODE_A)
-		{
-			player.isMoving = true;
-			player.playerRect.x -= player.moveSpeed;
-		}
-		if (event.key.keysym.scancode == SDL_SCANCODE_D)
-		{
-			player.isMoving = true;
-			player.playerRect.x += player.moveSpeed;
-		}
+			if (event.key.keysym.scancode == SDL_SCANCODE_W)
+			{
+				player.isMoving = true;
+				player.playerRect.y -= player.moveSpeed;
+			}
+			if (event.key.keysym.scancode == SDL_SCANCODE_S)
+			{
+				player.isMoving = true;
+				player.playerRect.y += player.moveSpeed;
+			}
+			if (event.key.keysym.scancode == SDL_SCANCODE_A)
+			{
+				player.isMoving = true;
+				player.playerRect.x -= player.moveSpeed;
+			}
+			if (event.key.keysym.scancode == SDL_SCANCODE_D)
+			{
+				player.isMoving = true;
+				player.playerRect.x += player.moveSpeed;
+			}
+		}		
 
 	case SDL_USEREVENT:
-		if (event.user.data1 == timerTag);
+		if (event.user.code == 5)
 		{
 			countdownInterval();
 		}
@@ -183,7 +197,7 @@ void Game::createEnemies(int numEnemies)
 {
 	for (int i = 1; i <= numEnemies; i++)
 	{
-		Enemy* enemy = new Enemy(randNum.randomNum(0, width-20), randNum.randomNum(0, 400), 20, 40, randNum.randomNum(0, 1));
+		Enemy* enemy = new Enemy(randNum.randomNum(0, width-20), randNum.randomNum(0, 400), 20, 20, randNum.randomNum(0, 1));
 		enemies.push_back(enemy);
 	}
 }
@@ -251,9 +265,7 @@ Uint32 Game::TimerCallBack(Uint32 interval, void* param)
 	SDL_UserEvent userEvent;
 
 	userEvent.type = SDL_USEREVENT;
-	userEvent.code = 0;
-	userEvent.data1 = &timerTag;
-	userEvent.data2 = NULL;
+	userEvent.code = 5;
 
 	event.type = SDL_USEREVENT;
 	event.user = userEvent;
@@ -271,5 +283,6 @@ void Game::clean()
 	SDL_DestroyRenderer(renderer); //Destroys the renderer
 	IMG_Quit(); //Cleans initialised IMG subsystems
 	TTF_Quit(); //Cleans initialised TTF subsystems
+	Mix_FreeMusic(audio_background); //Cleans audio file
 	SDL_Quit(); //Cleans all initialised subsystems
 }
