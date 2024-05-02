@@ -186,7 +186,7 @@ void Game::render()
 			SDL_RenderCopy(renderer, enemyTexture, NULL, &enemies[i]->enemyRect);
 		}
 
-		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+		SDL_SetRenderDrawColor(renderer, 73, 79, 89, 255);
 	}
 
 	SDL_RenderPresent(renderer);
